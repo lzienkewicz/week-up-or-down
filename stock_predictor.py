@@ -46,7 +46,12 @@ def fetch_stock_data(ticker, api_key, secret_key):
     """Fetch stock data from Alpaca API"""
     print(f"Fetching data for {ticker}...")
 
-    client = StockHistoricalDataClient(api_key, secret_key)
+    # Use paper trading endpoint
+    client = StockHistoricalDataClient(
+        api_key,
+        secret_key,
+        url_override="https://data.alpaca.markets"
+    )
 
     # Fetch 3 years of weekly data to have enough for training
     end_date = datetime.now()
