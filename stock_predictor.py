@@ -13,13 +13,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 # Alpaca API credentials
-try:
-    from config import API_KEY, SECRET_KEY
-except ImportError:
-    # Fallback if config.py doesn't exist
-    API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
-    SECRET_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
-    print("Warning: config.py not found. Using placeholder credentials.")
+API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
+SECRET_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
 
 def calculate_macd(data, fast=12, slow=26, signal=9):
     """Calculate MACD indicator"""
