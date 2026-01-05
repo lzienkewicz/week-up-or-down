@@ -4,7 +4,7 @@ A machine learning application that predicts whether a stock's price will go up 
 
 ## Features
 
-- Fetches weekly stock data from **Yahoo Finance** (no API key required!)
+- Fetches weekly stock data from **Yahoo Finance**
 - Automatically adjusts for stock splits
 - Calculates technical indicators:
   - MACD (Moving Average Convergence Divergence)
@@ -22,8 +22,6 @@ Install required packages:
 ```bash
 pip install -r requirements.txt
 ```
-
-**That's it!** No API keys or authentication needed.
 
 ## Usage
 
@@ -91,10 +89,4 @@ Prediction: Next week's close will be UP
 - Dense Layer: 25 units (ReLU)
 - Output Layer: 1 unit (Sigmoid for binary classification)
 
-## Disclaimer
-
-This tool is for educational purposes only. Stock predictions are inherently uncertain and should not be the sole basis for investment decisions. Past performance does not guarantee future results.
-
-## License
-
-MIT License
+I don't know a lot about code, and know nothing about how exactly the market will predict. Use this tool only as a supplement to personal research and experimentation with the market. This is your best bet!
