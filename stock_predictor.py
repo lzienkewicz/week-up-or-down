@@ -61,6 +61,10 @@ def fetch_stock_data(ticker):
     # Reset index to make date a column
     df = df.reset_index()
 
+    # Flatten MultiIndex columns if present (yfinance sometimes returns MultiIndex)
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+
     # Rename columns to lowercase to match expected format
     df.columns = df.columns.str.lower()
 
