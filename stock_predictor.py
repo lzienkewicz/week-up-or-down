@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from alpaca.data.historical import StockHistoricalDataClient
-from alpaca.data.requests import StockBarsRequest
-from alpaca.data.timeframe import TimeFrame
+import yfinance as yf
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Sequential
@@ -11,10 +9,6 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.optimizers import Adam
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
-# Alpaca API credentials
-API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
-SECRET_KEY = "XXXXXXXXXXXXXXXXXXXXXXXX"
 
 def calculate_macd(data, fast=12, slow=26, signal=9):
     """Calculate MACD indicator"""
@@ -42,35 +36,36 @@ def calculate_moving_averages(data):
         mas[f'ma_{period}'] = data['close'].rolling(window=period).mean()
     return mas
 
-def fetch_stock_data(ticker, api_key, secret_key):
-    """Fetch stock data from Alpaca API"""
+def fetch_stock_data(ticker):
+    """Fetch stock data from Yahoo Finance"""
     print(f"Fetching data for {ticker}...")
-
-    # Try without authentication (rate-limited but should work for testing)
-    # According to Alpaca docs, API keys are optional for historical data
-    client = StockHistoricalDataClient()
 
     # Fetch 3 years of weekly data to have enough for training
     end_date = datetime.now()
     start_date = end_date - timedelta(days=3*365)
 
-    request_params = StockBarsRequest(
-        symbol_or_symbols=ticker,
-        timeframe=TimeFrame.Week,
+    # Download data from Yahoo Finance
+    # interval='1wk' for weekly data, auto_adjust=True for split adjustments
+    df = yf.download(
+        ticker,
         start=start_date,
         end=end_date,
-        adjustment='split'  # Adjust for stock splits
+        interval='1wk',
+        auto_adjust=True,  # Automatically adjust for stock splits
+        progress=False
     )
 
-    bars = client.get_stock_bars(request_params)
-    df = bars.df
+    if df.empty:
+        raise ValueError(f"No data found for ticker {ticker}")
 
-    # If multi-index, get data for the specific ticker
-    if isinstance(df.index, pd.MultiIndex):
-        df = df.xs(ticker, level='symbol')
-
-    # Reset index to make timestamp a column
+    # Reset index to make date a column
     df = df.reset_index()
+
+    # Rename columns to lowercase to match expected format
+    df.columns = df.columns.str.lower()
+
+    # Rename 'date' to 'timestamp' for consistency
+    df.rename(columns={'date': 'timestamp'}, inplace=True)
 
     return df
 
@@ -229,10 +224,10 @@ def main():
 
     # Fetch data
     try:
-        df = fetch_stock_data(ticker, API_KEY, SECRET_KEY)
+        df = fetch_stock_data(ticker)
     except Exception as e:
         print(f"Error fetching data: {e}")
-        print("Please check your API credentials and ticker symbol.")
+        print("Please check the ticker symbol and try again.")
         return
 
     if len(df) < 100:

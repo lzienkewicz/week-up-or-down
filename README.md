@@ -4,7 +4,7 @@ A machine learning application that predicts whether a stock's price will go up 
 
 ## Features
 
-- Fetches weekly stock data from Alpaca Markets API
+- Fetches weekly stock data from **Yahoo Finance** (no API key required!)
 - Automatically adjusts for stock splits
 - Calculates technical indicators:
   - MACD (Moving Average Convergence Divergence)
@@ -18,20 +18,12 @@ A machine learning application that predicts whether a stock's price will go up 
 
 ## Installation
 
-1. Install required packages:
+Install required packages:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Get your Alpaca API credentials:
-   - Sign up at [Alpaca Markets](https://alpaca.markets/)
-   - Get your API Key and Secret Key from the dashboard
-
-3. Edit `stock_predictor.py` and replace the placeholder API credentials:
-```python
-API_KEY = "YOUR_API_KEY_HERE"
-SECRET_KEY = "YOUR_SECRET_KEY_HERE"
-```
+**That's it!** No API keys or authentication needed.
 
 ## Usage
 
@@ -43,7 +35,7 @@ python stock_predictor.py
 When prompted, enter a ticker symbol (e.g., AAPL, TSLA, MSFT).
 
 The script will:
-1. Fetch 3 years of weekly data
+1. Fetch 3 years of weekly data from Yahoo Finance
 2. Calculate technical indicators
 3. Display interactive charts with normalized data
 4. Train an LSTM model
@@ -76,7 +68,7 @@ Prediction: Next week's close will be UP
 
 ## How It Works
 
-1. **Data Collection**: Fetches weekly OHLCV data from Alpaca with split adjustments
+1. **Data Collection**: Fetches weekly OHLCV data from Yahoo Finance with automatic split adjustments
 2. **Feature Engineering**: Calculates MACD, RSI, moving averages, and volume indicators
 3. **Normalization**: Scales all features to 0-1 range using MinMaxScaler
 4. **Sequence Creation**: Creates 10-week sequences for time series prediction
